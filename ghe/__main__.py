@@ -1,4 +1,7 @@
-from ghe import GHECLI
+from .ghe import GHECLI
+
+def main():
+    GHECLI()
 
 if __name__ == '__main__':
     GHECLI()
