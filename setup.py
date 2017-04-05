@@ -25,7 +25,7 @@ options = dict(
     author='Elliott Carlson',
     author_email='elliott.carlson@generalassemb.ly',
     packages=find_packages() + ['ghe'],
-    entry_points={'console_scripts': ['ghe = ghe:__main__:main']},
+    entry_points={'console_scripts': ['ghe = ghe.__main__:main']},
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

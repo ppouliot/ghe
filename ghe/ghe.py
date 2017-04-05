@@ -108,12 +108,12 @@ class GHECLI(GHE):
         class Parser(argparse.ArgumentParser):
             def help(self):
                 print('!')
-        
+
             def error(self, message):
                 if message == 'too few arguments':
                     ghe.cmdloop()
                     exit(0)
-                    
+
                 print('usage: %s <command>\n' % self.prog)
                 print('Available ghe commands are:')
                 actions = [
@@ -146,8 +146,7 @@ class GHECLI(GHE):
         args, opts = parser.parse_known_args()
 
         if args.cmd not in self.commands:
-            print('Unrecognized command')
-            parser.print_help()
+            self.cmdloop()
             exit(1)
 
         self._run_command(self.commands.get(args.cmd), opts)
