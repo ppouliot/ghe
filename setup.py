@@ -13,6 +13,9 @@ from setuptools import setup, find_packages
 
 VERSION = '0.0.1'
 
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+
 options = dict(
     name='ghe',
     version=VERSION,
@@ -36,7 +39,8 @@ options = dict(
         'Programming Language :: Python'
     ],
     long_description=open('README.rst').read(),
-    include_package_data=True
+    include_package_data=True,
+    install_requires=required
 )
 
 setup(**options)
