@@ -34,10 +34,9 @@ show_help() {
 [ -f $HOME/.ghe/keys/ghe-maintenance-on ] || show_help
 [ -f $HOME/.ghe/keys/ghe-maintenance-off ] || show_help
 
-
 maintenance() {
   cmd=$1
-  local conn="ssh -p 122 admin@git.generalassemb.ly -i ${HOME}/.ghe/keys"
+  local conn="ssh -p 122 admin@${ghe-host} -i ${HOME}/.ghe/keys"
   local ret
   ret=`${conn}/ghe-maintenance-${cmd} 2> /dev/null`
   res=$?

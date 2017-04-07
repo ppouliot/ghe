@@ -100,7 +100,10 @@ class GHE(Cmd):
             return self._STOP_AND_EXIT
 
         if cmd == 'help':
-            return self._shell_help(line)
+            print('Available %s commands are:' % __title__)
+            for command in self.commands.keys():
+                print('  %s' % command)
+            return
 
         if cmd == 'set':
             key, val = args.split(' ', 1)

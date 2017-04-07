@@ -34,6 +34,10 @@ driver.find_element_by_name('commit').click()
 
 driver.get('https://%s/stafftools/users/%s/admin' % (ghe_host, username))
 
+if 'Page not found' in driver.title or username.lower() not in driver.title.lower():
+    print('User not found, or insufficient access rights to admin users.')
+    sys.exit()
+
 base = '#confirm_deletion form input'
 u = driver.find_element_by_css_selector('%s[name=utf8]' % base)
 m = driver.find_element_by_css_selector('%s[name=_method]' % base)
