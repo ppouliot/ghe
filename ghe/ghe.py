@@ -4,21 +4,47 @@ import glob
 import argparse
 import inspect
 import subprocess
-from cmd2 import Cmd
-from pprint import pprint
+import logging
+import keyring
+import pyparsing
+
+from cmd2 import Cmd, ParsedString
+
+logger = logging.getLogger(__name__)
+
+from . import __title__, __desc__, __version__
+
+keyring_keys = [
+    'ghe-host',
+    'ghe-user',
+    'ghe-pass'
+]
 
 class GHE(Cmd):
 
     def __init__(self):
         """ Initial setup. """
 
+        self.set_logger()
+        self.log.info('%s v%s', __title__, __version__)
+
+        self.parser = pyparsing.Word(self.legalChars + '/\\')
+
+        self.terminators = []
         Cmd.__init__(self)
 
+        if sys.platform == 'darwin':
+            _fix_mac_codesign()
+
         self.commands = self._get_commands()
-        self.prompt = 'GHE> '
+        self.prompt = '%s> ' % __title__.upper()
 
         self.env = os.environ.copy()
 
+    def set_logger(self, logger=None):
+        """ Set the logger. """
+
+        self.log = logger or logging.getLogger(__name__)
 
     def _get_commands(self):
         """ Find commands in PATH and commands directory. """
@@ -41,7 +67,7 @@ class GHE(Cmd):
             paths.append(cmd_path)
 
         for path in paths:
-            files = glob.glob(os.path.join(path, 'ghe-*'))
+            files = glob.glob(os.path.join(path, '%s-*' % __title__))
 
             for fname in files:
                 if os.path.isfile(fname) and os.access(fname, os.X_OK):
@@ -55,8 +81,8 @@ class GHE(Cmd):
         """ Run a subcommand. """
 
         env = os.environ.copy()
-        env['TESTER'] = 'this is fun.'
-
+        for key in keyring_keys:
+            env[key] = get_key(key)
 
         subprocess.call([cmd] + opts, env=env)
 
@@ -64,8 +90,10 @@ class GHE(Cmd):
         """ Override cmd2's command line parsing for interactive shell. """
 
         statement = self.parsed(line)
-        cmd = statement.parsed.command
-        args = statement.parsed.args
+        cmd = statement.parsed.raw
+        args = ''
+        if ' ' in cmd:
+            cmd, args = cmd.split(' ', 1)
 
         if cmd == 'exit' or cmd == 'quit':
             self._should_quit = True
@@ -73,6 +101,20 @@ class GHE(Cmd):
 
         if cmd == 'help':
             return self._shell_help(line)
+
+        if cmd == 'set':
+            key, val = args.split(' ', 1)
+            if key and val:
+                set_key(key, val)
+            return
+
+        if cmd == 'get':
+            print(get_key(args.split(' ')[0]))
+            return
+
+        if cmd == 'unset':
+            unset_key(args.split(' ')[0])
+            return
 
         if cmd not in self.commands:
             print('%s: command not found' % cmd)
@@ -103,19 +145,16 @@ class GHECLI(GHE):
     def _process_cl_args(self):
         """ Process command line arguments. """
 
-        ghe = self
+        app = self
 
         class Parser(argparse.ArgumentParser):
-            def help(self):
-                print('!')
-
             def error(self, message):
                 if message == 'too few arguments':
-                    ghe.cmdloop()
+                    app.cmdloop()
                     exit(0)
 
                 print('usage: %s <command>\n' % self.prog)
-                print('Available ghe commands are:')
+                print('Available %s commands are:' % __title__)
                 actions = [
                     action for action in self._actions
                     if isinstance(action, argparse._SubParsersAction)
@@ -127,12 +166,11 @@ class GHECLI(GHE):
                 exit(1)
 
         parser = Parser(
-            description='GitHub Enterprise CLI Management Tool',
+            description=__desc__,
             add_help=False
         )
 
         parser.add_argument('--help', '-h', action='store')
-
 
         subparsers = parser.add_subparsers(title='commands',
                 description='command to run',
@@ -152,3 +190,44 @@ class GHECLI(GHE):
         self._run_command(self.commands.get(args.cmd), opts)
 
         exit(0)
+
+def set_key(key, val):
+    keyring.set_password(__title__, key, val)
+
+def get_key(key):
+    return keyring.get_password(__title__, key) or ''
+
+def unset_key(key):
+    keyring.delete_password(__title__, key)
+
+def _fix_mac_codesign():
+    """If the running Python interpreter isn't property signed on macOS
+    it's unable to get/set password using keyring from Keychain.
+    In such case, we need to sign the interpreter first.
+    https://github.com/jaraco/keyring/issues/219
+    """
+    global fix_mac_codesign
+    logger = logging.getLogger(__name__ + '.fix_mac_codesign')
+    p = subprocess.Popen(['codesign', '-dvvvvv', sys.executable],
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+
+    def prepend_lines(c, text):
+        return ''.join(c + l for l in text.splitlines(True))
+    logger.debug('codesign -dvvvvv %s:\n%s\n%s',
+                 sys.executable,
+                 prepend_lines('| ', stdout),
+                 prepend_lines('> ', stderr))
+    if b'\nSignature=' in stderr:
+        logger.debug('%s: already signed', sys.executable)
+        return
+    logger.info('%s: not signed yet; try signing...', sys.executable)
+    p = subprocess.Popen(['codesign', '-f', '-s', '-', sys.executable],
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    os.waitpid(p.pid, 0)
+    logger.debug('%s: signed\n%s\n%s',
+                 sys.executable,
+                 prepend_lines('| ', stdout),
+                 prepend_lines('> ', stderr))
+    logger.debug('respawn the equivalent process...')
+    raise SystemExit(subprocess.call(sys.argv))

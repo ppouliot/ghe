@@ -1,3 +1,10 @@
+Version 0.0.2
+April 7, 2017
+
+- Set/get/unset secrets via OS keychain
+- Pass secrets via local environment variables to sub commands
+- delete-user sub-command to delete user via selenium automation
+
 Version 0.0.1
 April 4, 2017
 
