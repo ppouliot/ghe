@@ -1,48 +1,144 @@
-ghe
-===
+GHE CLI
+=======
 
-GitHub Enterprise CLI Management Tool
+GHE CLI is a tool to assist is managing Github Enterprise remotely from the
+command line. It offers the ability to run sub-commands directly, or via an
+interactive shell, and maintains access to safely secured variables.
 
 Installation
 ------------
 
-Using `pip <http://www.pip-installer.org>`_::
+Using pip:
 
-    [sudo] pip install https://git.generalassemb.ly/ga-admin-utils/ghe/releases/download/0.0.2/ghe-0.0.2.tar.gz
+    $ sudo pip install https://git.generalassemb.ly/ga-admin-utils/ghe/releases/download/0.0.3/ghe-0.0.3.tar.gz
 
-Usage
------
+Interactive Shell
+-----------------
 
-To enter an interactive shell:
+To enter the interactive shell, run `ghe` from the command line:
 
     $ ghe
+    GHE> <command name> [...args]
 
-To run a command directly:
+Once you are in the interactive shell, you will see the `GHE>` prompt; this is
+where you can type in commands that have been registered with the system. See
+the `Commands` section for further details.
+
+The interactive shell has various built in commands:
+
+Get a list of registered commands:
+
+    GHE> help
+    Available ghe commands are:
+      migrate
+      org-diff
+      delete-user
+      maintenance
+    GHE>
+
+Set a key-value pair in the keychain:
+
+    GHE> set keyname value
+    GHE>
+
+Get a value from the keychain based on the key name:
+
+    GHE> get keyname
+    value
+    GHE>
+
+Clear a key-value pair from the keychain:
+
+    GHE> unset keyname
+    GHE>
+
+The interactive shell provides tab-completion of commands, and can provide a
+listing of commands by pressing tab twice.
+
+Direct Command Line Access
+--------------------------
+
+In addition to the interactive shell, commands can be executed directly from ghe
+via the command line.
 
     $ ghe <command name> [...args]
 
-You can also import ghe directly; to run the interactive shell:
+Running commands from the command line provides the same benefits that the
+interactive shell offers.
+
+Interactive Shell from Custom Code
+----------------------------------
+
+Finally, the interactive shell can be directly launched from python:
 
     from ghe import GHE
     app = GHE()
-    app.cmdloop()
+    app.cmdloop() # Launches the interactive shell
 
-Extending ghe
--------------
+Commands
+--------
+`ghe` registers commands by finding executable scripts following a specific naming
+convention. On startup, ghe searches the `PATH` environment, as well as the
+commands directory that comes with ghe to auto-register all executable scripts
+based on the `ghe-<command>.<ext>`. The command portion of the filename is what
+gets registered as the command in ghe. For example, if the file is named
+`ghe-test.sh`, then the command `test` will execute the corresponding script name.
 
-Create a new executable file in your disired programming language of choice, named in a format of
+Following are a list of commands that are pre-installed with ghe:
 
-    ghe-<command>.<ext>
-    
-As long as the file is named in this format, marked as an executable, and is located within the systems PATH, it will be
-automatically found by ghe and added as a command.
+* ghe-announce
+* ghe-delete-user
+* ghe-maintenance
+* ghe-migrate
+* ghe-org-diff
 
-If you are using python to create a new sub command, you can import ghe to access the shared keychain.
+One key feature that ghe provides to the subcommands is access to the shared
+keychain. Since ghe maintains the key-value pairs within the systems keychain
+(OSX keyring), it is able to share the data privately to the subcommands via a
+localized environment that is shared when ghe creates the subprocess to call the
+subcommands. By setting these private environment variables, the secrets are
+shared with all sub-commands, without requiring to give the subcommands access
+to the keychain.
 
-    from ghe import set_key, get_key, unset_key
-    set_key('password', 'secret password')
-    print(get_key('password'))
-    unset_key('password')
+The keynames of the keychain values that are set in the local environment for
+every process call are:
 
+* `ghe-host` -  The hostname to the GHE server
+* `ghe-ssh-user` - The SSH username to the GHE server
+* `ghe-ssh-port` - The SSH port of the GHE server
+* `ghe-user` - A GHE admin level user
+* `ghe-pass` - The password for the GHE admin level account
+* `ghe-token` - An access token for the GHE admin level account
+* `gh-token` - An access token to your GitHub.com account
 
-    
+Part of your initial setup of ghe should be setting the values of these keys.
+See Setup for more information.
+
+Additionally, if one were writing their subcommands in python, the keychain can
+be directly accessed (for the primary set of key-value pairs that are needed by
+ghe, or customized ones that your subcommands may need). This can be done using
+the following example code:
+
+    from ghe import get_key, set_key, unset_key
+
+    set_key('my_key_name', 'my_key_value')
+    print(get_key('my_key_name')) # outputs my_key_value
+    unset_key('my_key_name')
+    print(get_key('my_key_name')) # outputs None
+
+Setup
+-----
+
+On initial setup of ghe, it is recommended to set up the initial key-value pairs
+in the keychain that most subcommands will expect to be set to function properly. 
+
+    GHE> set ghe-host git.generalassemb.ly
+    GHE> set ghe-ssh-user admin
+    GHE> set ghe-ssh-port 122
+    GHE> set ghe-user ghe-admin
+    GHE> set ghe-pass secretpassword
+    GHE> set ghe-token ABCDEF1234567890
+    GHE> set gh-token ABCDEF1234567890
+
+Additionally, you should have registered an SSH key on your machine within the
+Github Enterprise Management Console. See SSH Access for more information.

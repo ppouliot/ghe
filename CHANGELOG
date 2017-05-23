@@ -1,9 +1,19 @@
 Version 0.0.3
-April 11, 2017
+May 22, 2017
 
-- Fix environment variable parsing and passthrough
-- Add ghe-migrate command
-- Implement keyring for keychain access and sharing
+Fixes:
+- Tab completion on OSX
+- Storing key-value secrets in system keychain
+- Passing of environment variables to executed sub-commands
+
+Rewrite older sub-commands:
+- delete-user
+- maintenance
+
+New sub-commands added:
+- announce
+- fix-user-email
+- migrate
 
 Version 0.0.2
 April 7, 2017
