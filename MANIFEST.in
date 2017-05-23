@@ -2,4 +2,5 @@ include LICENSE
 include README.rst
 include CHANGELOG
 include requirements.txt
-graft ghe/commands
+recursive-include ghe/commands *
+global-exclude *.pyc

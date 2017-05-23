@@ -1,3 +1,10 @@
+Version 0.0.3
+April 11, 2017
+
+- Fix environment variable parsing and passthrough
+- Add ghe-migrate command
+- Implement keyring for keychain access and sharing
+
 Version 0.0.2
 April 7, 2017
 

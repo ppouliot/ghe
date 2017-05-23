@@ -11,7 +11,7 @@ import sys
 
 from setuptools import setup, find_packages
 
-VERSION = '0.0.2'
+VERSION = '0.0.3'
 
 with open('requirements.txt') as f:
     required = f.read().splitlines()
@@ -24,7 +24,7 @@ options = dict(
     keywords=['github enterprise', 'ghe'],
     author='Elliott Carlson',
     author_email='elliott.carlson@generalassemb.ly',
-    packages=find_packages() + ['ghe'],
+    packages=find_packages(exclude=['.pyc']) + ['ghe'],
     entry_points={'console_scripts': ['ghe = ghe.__main__:main']},
     classifiers=[
         'Development Status :: 3 - Alpha',

@@ -7,6 +7,14 @@ import subprocess
 import logging
 import keyring
 import pyparsing
+import shlex
+
+# Fix OS X Tab completion due to libedit not being fully readline compatible.
+import readline, rlcompleter
+if 'libedit' in readline.__doc__:
+    readline.parse_and_bind('bind ^I rl_complete')
+else:
+    readline.parse_and_bind('tab: complete')
 
 from cmd2 import Cmd, ParsedString
 
@@ -15,9 +23,13 @@ logger = logging.getLogger(__name__)
 from . import __title__, __desc__, __version__
 
 keyring_keys = [
-    'ghe-host',
-    'ghe-user',
-    'ghe-pass'
+    'ghe-host',     # The hostname to the GHE server
+    'ghe-ssh-user', # The SSH username to the GHE server (default: admin)
+    'ghe-ssh-port', # The SSH port of the GHE server (default: 122)
+    'ghe-user',     # A GHE admin level user
+    'ghe-pass',     # The password for the GHE admin level account
+    'ghe-token',    # An access token for the GHE admin level account
+    'gh-token'      # An access token to your GitHub.com account
 ]
 
 class GHE(Cmd):
@@ -38,6 +50,11 @@ class GHE(Cmd):
 
         self.commands = self._get_commands()
         self.prompt = '%s> ' % __title__.upper()
+
+        for key in keyring_keys:
+            if not keyring.get_password(__title__, key):
+                print(('Missing keyring entry for {0}. Please use `set {0} '
+                       '<value>` to save to keyring.').format(key))
 
         self.env = os.environ.copy()
 
@@ -84,6 +101,9 @@ class GHE(Cmd):
         for key in keyring_keys:
             env[key] = get_key(key)
 
+        if type(opts) == str:
+            opts = shlex.split(opts)
+
         subprocess.call([cmd] + opts, env=env)
 
     def onecmd(self, line):
@@ -123,7 +143,7 @@ class GHE(Cmd):
             print('%s: command not found' % cmd)
             return
 
-        return self._run_command(self.commands.get(cmd), [args])
+        return self._run_command(self.commands.get(cmd), args)
 
     def completenames(self, text, *ignored):
         """ Override cmd's completenames to auto complete sub commands. """
