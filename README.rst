@@ -10,12 +10,16 @@ Installation
 
 Using pip:
 
+.. code-block:: bash
+
     $ sudo pip install https://git.generalassemb.ly/ga-admin-utils/ghe/releases/download/0.0.3/ghe-0.0.3.tar.gz
 
 Interactive Shell
 -----------------
 
 To enter the interactive shell, run `ghe` from the command line:
+
+.. code-block:: bash
 
     $ ghe
     GHE> <command name> [...args]
@@ -28,6 +32,8 @@ The interactive shell has various built in commands:
 
 Get a list of registered commands:
 
+.. code-block:: bash
+
     GHE> help
     Available ghe commands are:
       migrate
@@ -38,16 +44,22 @@ Get a list of registered commands:
 
 Set a key-value pair in the keychain:
 
+.. code-block:: bash
+
     GHE> set keyname value
     GHE>
 
 Get a value from the keychain based on the key name:
+
+.. code-block:: bash
 
     GHE> get keyname
     value
     GHE>
 
 Clear a key-value pair from the keychain:
+
+.. code-block:: bash
 
     GHE> unset keyname
     GHE>
@@ -61,6 +73,8 @@ Direct Command Line Access
 In addition to the interactive shell, commands can be executed directly from ghe
 via the command line.
 
+.. code-block:: bash
+
     $ ghe <command name> [...args]
 
 Running commands from the command line provides the same benefits that the
@@ -70,6 +84,8 @@ Interactive Shell from Custom Code
 ----------------------------------
 
 Finally, the interactive shell can be directly launched from python:
+
+.. code-block:: python
 
     from ghe import GHE
     app = GHE()
@@ -119,6 +135,8 @@ be directly accessed (for the primary set of key-value pairs that are needed by
 ghe, or customized ones that your subcommands may need). This can be done using
 the following example code:
 
+.. code-block:: python
+
     from ghe import get_key, set_key, unset_key
 
     set_key('my_key_name', 'my_key_value')
@@ -131,6 +149,8 @@ Setup
 
 On initial setup of ghe, it is recommended to set up the initial key-value pairs
 in the keychain that most subcommands will expect to be set to function properly. 
+
+.. code-block:: bash
 
     GHE> set ghe-host git.generalassemb.ly
     GHE> set ghe-ssh-user admin
