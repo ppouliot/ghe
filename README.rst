@@ -19,7 +19,7 @@ Interactive Shell
 
 To enter the interactive shell, run `ghe` from the command line:
 
-.. code-block:: bash
+.. code-block::
 
     $ ghe
     GHE> <command name> [...args]
@@ -32,26 +32,28 @@ The interactive shell has various built in commands:
 
 Get a list of registered commands:
 
-.. code-block:: bash
+.. code-block::
 
     GHE> help
     Available ghe commands are:
       migrate
+      reset-user-email
       org-diff
-      delete-user
       maintenance
+      announce
+      delete-user
     GHE>
 
 Set a key-value pair in the keychain:
 
-.. code-block:: bash
+.. code-block::
 
     GHE> set keyname value
     GHE>
 
 Get a value from the keychain based on the key name:
 
-.. code-block:: bash
+.. code-block::
 
     GHE> get keyname
     value
@@ -59,7 +61,7 @@ Get a value from the keychain based on the key name:
 
 Clear a key-value pair from the keychain:
 
-.. code-block:: bash
+.. code-block::
 
     GHE> unset keyname
     GHE>
@@ -73,7 +75,7 @@ Direct Command Line Access
 In addition to the interactive shell, commands can be executed directly from ghe
 via the command line.
 
-.. code-block:: bash
+.. code-block::
 
     $ ghe <command name> [...args]
 
@@ -102,12 +104,12 @@ gets registered as the command in ghe. For example, if the file is named
 
 Following are a list of commands that are pre-installed with ghe (Wiki links to come):
 
-* ghe-announce
-* ghe-delete-user
-* ghe-reset-user-email
-* ghe-maintenance
-* ghe-migrate
-* ghe-org-diff
+* `ghe-announce`_
+* `ghe-delete-user`_
+* `ghe-maintenance`_
+* `ghe-migrate`_
+* `ghe-org-diff`_
+* `ghe-reset-user-email`_
 
 One key feature that ghe provides to the subcommands is access to the shared
 keychain. Since ghe maintains the key-value pairs within the systems keychain
@@ -127,7 +129,7 @@ every process call are:
 * `ghe-pass` - The password for the GHE admin level account
 * `ghe-token` - An access token for the GHE admin level account
 * `gh-token` - An access token to your GitHub.com account
-* `ghe-otp` - An authenticator code to generate OTP/2FA codes
+* `ghe-totp` - An authenticator code to generate OTP/2FA codes
 
 Part of your initial setup of ghe should be setting the values of these keys.
 See Setup for more information.
@@ -152,7 +154,7 @@ Setup
 On initial setup of ghe, it is recommended to set up the initial key-value pairs
 in the keychain that most subcommands will expect to be set to function properly. 
 
-.. code-block:: bash
+.. code-block::
 
     GHE> set ghe-host git.generalassemb.ly
     GHE> set ghe-ssh-user admin
@@ -161,7 +163,14 @@ in the keychain that most subcommands will expect to be set to function properly
     GHE> set ghe-pass secretpassword
     GHE> set ghe-token ABCDEF1234567890
     GHE> set gh-token ABCDEF1234567890
-    GHE> set ghe-otp ABCDEF1234567890
+    GHE> set ghe-totp ABCDEF1234567890
 
 Additionally, you should have registered an SSH key on your machine within the
 Github Enterprise Management Console. See SSH Access for more information.
+
+.. _ghe-announce: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90announce
+.. _ghe-delete-user: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90delete%E2%80%90user
+.. _ghe-reset-user-email: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90reset%E2%80%90user%E2%80%90email
+.. _ghe-maintenance: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90maintenance
+.. _ghe-migrate: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90migrate
+.. _ghe-org-diff: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90org%E2%80%90diff
