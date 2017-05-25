@@ -29,7 +29,8 @@ keyring_keys = [
     'ghe-user',     # A GHE admin level user
     'ghe-pass',     # The password for the GHE admin level account
     'ghe-token',    # An access token for the GHE admin level account
-    'gh-token'      # An access token to your GitHub.com account
+    'gh-token',     # An access token to your GitHub.com account
+    'ghe-totp'      # A base32 seed for the OTP two-factor code generation
 ]
 
 class GHE(Cmd):

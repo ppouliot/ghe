@@ -1,3 +1,11 @@
+Version 0.0.4
+May 24, 2017
+
+- Add ghe-otp as new parameter; this should be an authenticator base key to
+generate OTP/2FA codes
+- Add OTP support to ghe-delete-user
+- Implement ghe-reset-user-email (formerly non-working ghe-fix-user-email)
+
 Version 0.0.3
 May 22, 2017
 
