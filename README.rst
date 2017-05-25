@@ -12,7 +12,7 @@ Using pip:
 
 .. code-block:: bash
 
-    $ sudo pip install https://git.generalassemb.ly/ga-admin-utils/ghe/releases/download/0.0.3/ghe-0.0.3.tar.gz
+    $ sudo pip install https://git.generalassemb.ly/ga-admin-utils/ghe/releases/download/0.0.4/ghe-0.0.4.tar.gz
 
 Interactive Shell
 -----------------
@@ -100,10 +100,11 @@ based on the `ghe-<command>.<ext>`. The command portion of the filename is what
 gets registered as the command in ghe. For example, if the file is named
 `ghe-test.sh`, then the command `test` will execute the corresponding script name.
 
-Following are a list of commands that are pre-installed with ghe:
+Following are a list of commands that are pre-installed with ghe (Wiki links to come):
 
 * ghe-announce
 * ghe-delete-user
+* ghe-reset-user-email
 * ghe-maintenance
 * ghe-migrate
 * ghe-org-diff
@@ -126,6 +127,7 @@ every process call are:
 * `ghe-pass` - The password for the GHE admin level account
 * `ghe-token` - An access token for the GHE admin level account
 * `gh-token` - An access token to your GitHub.com account
+* `ghe-otp` - An authenticator code to generate OTP/2FA codes
 
 Part of your initial setup of ghe should be setting the values of these keys.
 See Setup for more information.
@@ -159,6 +161,7 @@ in the keychain that most subcommands will expect to be set to function properly
     GHE> set ghe-pass secretpassword
     GHE> set ghe-token ABCDEF1234567890
     GHE> set gh-token ABCDEF1234567890
+    GHE> set ghe-otp ABCDEF1234567890
 
 Additionally, you should have registered an SSH key on your machine within the
 Github Enterprise Management Console. See SSH Access for more information.

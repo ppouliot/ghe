@@ -11,7 +11,7 @@ import sys
 
 from setuptools import setup, find_packages
 
-VERSION = '0.0.3'
+VERSION = '0.0.4'
 
 with open('requirements.txt') as f:
     required = f.read().splitlines()
