@@ -237,7 +237,7 @@ def _fix_mac_codesign():
     stdout, stderr = p.communicate()
 
     def prepend_lines(c, text):
-        return ''.join(c + l for l in text.splitlines(True))
+        return ''.join(c + l for l in text.decode('utf-8').splitlines(True))
     logger.debug('codesign -dvvvvv %s:\n%s\n%s',
                  sys.executable,
                  prepend_lines('| ', stdout),
