@@ -1,3 +1,9 @@
+Version 0.0.5
+July 10, 2017
+
+- Python 3 fixes
+- Add debug mode to ghe-migrate
+
 Version 0.0.4
 May 24, 2017
 

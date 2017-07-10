@@ -69,6 +69,7 @@ class Migrate(object):
         self.ghe_user = kwargs.get('ghe_user')
         self.ghe_token = kwargs.get('ghe_token')
         self.gh_token = kwargs.get('gh_token')
+        self.verbose = kwargs.get('verbose')
 
         self.repos = []
 
@@ -209,7 +210,7 @@ class Migrate(object):
         editor = os.environ.get('EDITOR', 'vim')
         conflicts = self.run_ssh('ghe-migrator conflicts -g %s' % self.guid)
 
-        with tempfile.NamedTemporaryFile(suffix='.tmp') as tf:
+        with tempfile.NamedTemporaryFile(suffix='.tmp', mode='wt') as tf:
             conflict_cnt = 0
 
             for line in conflicts:
@@ -273,13 +274,16 @@ class Migrate(object):
     def run_ssh(self, cmd):
         ''' Run the command on the SSH connection to the GHE server. '''
 
-        print(' - {0}'.format(cmd))
+        if self.verbose:
+            print(' - {0}'.format(cmd))
+
         stdin, stdout, stderr = self.client.exec_command(cmd)
 
         ret = []
         for line in stdout:
             ret.append(line)
-            print(' + {0}'.format(line.encode('utf-8').rstrip()))
+            if self.verbose:
+                print(' + {0}'.format(line.encode('utf-8').rstrip()))
 
         return ret
 
@@ -353,10 +357,11 @@ if __name__ == '__main__':
         action='store_true',
         help='use all repos from organization'
     )
-    parser.add_argument('-resolve-all',
+    parser.add_argument('-verbose',
         action='store_true',
-        help='attempt to automatically resolve all migration conflicts'
+        help='be extra verbose in all communication with the GHE server'
     )
+
     parser.add_argument('-batch',
         action='store',
         default=100,
@@ -473,7 +478,8 @@ if __name__ == '__main__':
         ghe_ssh_user=args.ghe_ssh_user,
         ghe_user=args.ghe_user,
         ghe_token=args.ghe_token,
-        gh_token=args.gh_token
+        gh_token=args.gh_token,
+        verbose=args.verbose
     )
 
     if (args.all):
