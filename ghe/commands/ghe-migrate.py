@@ -48,7 +48,10 @@ import argparse, csv, math, os, paramiko, re, requests, sys, tempfile, time
 
 from github import Github
 from subprocess import call
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from builtins import input
 from pprint import pprint
