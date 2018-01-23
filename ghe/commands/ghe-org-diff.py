@@ -19,7 +19,7 @@ from ghe import get_key
 from github import Github
 from github.GithubException import GithubException
 from subprocess import call
-from StringIO import StringIO
+from io import StringIO
 
 from builtins import input
 from pprint import pprint
