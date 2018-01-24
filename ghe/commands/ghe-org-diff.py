@@ -2,15 +2,27 @@
 """
 ghe-org-diff.py - GitHub.com and GitHub Enterprise Org Diff
 
-usage: ghe-migrate.py [-h] [-repos REPOS] [-file REPOS] [-all]
-                      [-ghe-host HOST] [-ghe-port PORT] [-ghe-user USER]
-                      source dest
+usage: ghe-org-diff.py [-h] [-ghe-host HOST] [-ghe-token TOKEN]
+                       [-gh-token TOKEN]
+                       source [dest]
 
 Tool to determine if the repos on two organizations match on the source
 GitHub.com and destination GitHub Enterprise server.
 
 
-You must use one of -repos, -file or -all.
+positional arguments:
+  source            the organization on GitHub.com
+  dest              the organization on your GitHub Enterprise instance.
+
+optional arguments:
+  -h, --help        show this help message and exit
+  -ghe-host HOST    the hostname to your GitHub Enterprise server (default:
+                    value from `ghe-host` environment variable)
+  -ghe-token TOKEN  GitHub Enterprise access token for user set with -ghe-user
+                    (default: value from `ghe-token` environment variable)
+  -gh-token TOKEN   GitHub.com access token for an account with admin
+                    priveleges on source organization (default: value from
+                    `gh-token` environment variable)
 """
 
 import argparse, csv, math, os, paramiko, re, requests, sys, tempfile, time
@@ -153,7 +165,7 @@ if __name__ == '__main__':
         gh_token=args.gh_token
     )
 
-    print('Comparing https://github.org/{0}/* to https://{1}/{2}'.format(
+    print('Comparing https://github.org/{0}/* to {1}/{2}'.format(
         app.source_org,
         app.ghe_host,
         app.dest_org
