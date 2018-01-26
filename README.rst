@@ -168,9 +168,9 @@ in the keychain that most subcommands will expect to be set to function properly
 Additionally, you should have registered an SSH key on your machine within the
 Github Enterprise Management Console. See SSH Access for more information.
 
-.. _ghe-announce: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90announce
-.. _ghe-delete-user: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90delete%E2%80%90user
-.. _ghe-reset-user-email: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90reset%E2%80%90user%E2%80%90email
-.. _ghe-maintenance: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90maintenance
-.. _ghe-migrate: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90migrate
-.. _ghe-org-diff: https://git.generalassemb.ly/ga-admin-utils/ghe/wiki/ghe%E2%80%90org%E2%80%90diff
+.. _ghe-announce: https://github.com/ppouliot/ghe/wiki/ghe%E2%80%90announce
+.. _ghe-delete-user: https://github.com/ppouliot/ghe/wiki/ghe%E2%80%90delete%E2%80%90user
+.. _ghe-reset-user-email: https://github.com/ppouliot/ghe/wiki/ghe%E2%80%90reset%E2%80%90user%E2%80%90email
+.. _ghe-maintenance: https://github.com/ppouliot/ghe/wiki/ghe%E2%80%90maintenance
+.. _ghe-migrate: https://github.com/ppouliot/ghe/wiki/ghe%E2%80%90migrate
+.. _ghe-org-diff: https://github.com/ppouliot/ghe/wiki/ghe%E2%80%90org%E2%80%90diff
