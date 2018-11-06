@@ -12,7 +12,7 @@ Using pip:
 
 .. code-block:: bash
 
-    $ sudo pip install https://git.generalassemb.ly/ga-admin-utils/ghe/releases/download/0.0.5/ghe-0.0.5.tar.gz
+    $ sudo pip install https://github.com/ppouliot/ghe/archive/0.0.6.tar.gz
 
 Interactive Shell
 -----------------
